@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.laidian.limiter.core.config.IpLimiterConfiguration
