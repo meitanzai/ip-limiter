@@ -71,6 +71,7 @@ public class IpLimiterInterceptor implements HandlerInterceptor {
 			if (StringUtils.isEmpty(_appName)) {
 				_appName = this.appName;
 			}
+			// 这两个属性是给FreeMarker在页面上引用的属性
 			request.setAttribute("appName", _appName);
 			request.setAttribute("ip", request.getParameter("ip"));
 			String ip = IpHelper.getIpAddress(request);
