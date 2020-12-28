@@ -4,7 +4,7 @@
 
 	<groupId>com.laidian.limiter</groupId>
 	<artifactId>ip-limiter-dashboard</artifactId>
-	<version>1.0.8</version>
+	<version>1.0.9</version>
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -84,8 +84,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.laidian.limiter</groupId>
-			<artifactId>ip-limiter-core</artifactId>
-			<version>1.0.7</version>
+			<artifactId>ip-limiter-core-web</artifactId>
+			<version>1.0.9</version>
 		</dependency>
 		<!-- 提供健康检查的接口 -->
 		<dependency>

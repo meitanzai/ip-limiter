@@ -10,9 +10,7 @@ import com.laidian.env.checker.util.SystemUtil;
 import com.laidian.limiter.common.util.NetUtil;
 
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @ConfigurationProperties(prefix = "ip.limiter.core")
 @Data
 public class IpLimiterConfigurationProperties {
@@ -59,7 +57,6 @@ public class IpLimiterConfigurationProperties {
 		if (dashboardAddress == null) {
 			dashboardAddress = dashboardAddressMap.get(SystemUtil.getRuntimeEnv());
 		}
-		log.info("控制台地址dashboardAddress = {}",dashboardAddress);
 		return dashboardAddress;
 	}
 

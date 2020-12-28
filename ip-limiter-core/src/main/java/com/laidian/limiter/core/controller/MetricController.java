@@ -25,7 +25,7 @@ import com.laidian.limiter.common.vo.IpLimitVO;
 import com.laidian.limiter.common.vo.Result;
 import com.laidian.limiter.common.vo.WhiteIpVO;
 import com.laidian.limiter.core.cache.IpCacheHelper;
-import com.laidian.limiter.core.interceptor.IpLimiterInterceptor;
+import com.laidian.limiter.core.interceptor.IpQpsRateLimiter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -108,7 +108,7 @@ public class MetricController {
 		}
 
 		ControlDataVO controlDataVO = ControlDataVO.builder()
-				.defaultIpMaxQps(IpLimiterInterceptor.getPermitsPerSecondEachIp()).qpsLimit(ipLimitMap).whiteIp(whiteIp)
+				.defaultIpMaxQps(IpQpsRateLimiter.getPermitsPerSecondEachIp()).qpsLimit(ipLimitMap).whiteIp(whiteIp)
 				.blackIp(blackIp).build();
 		return controlDataVO;
 	}

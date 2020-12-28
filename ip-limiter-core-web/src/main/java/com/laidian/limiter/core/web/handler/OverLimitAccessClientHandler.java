@@ -1,4 +1,4 @@
-package com.laidian.limiter.core.handler;
+package com.laidian.limiter.core.web.handler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

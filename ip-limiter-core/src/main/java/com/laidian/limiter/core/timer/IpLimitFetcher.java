@@ -21,7 +21,7 @@ import com.laidian.limiter.common.vo.IpLimitVO;
 import com.laidian.limiter.common.vo.WhiteIpVO;
 import com.laidian.limiter.core.config.IpLimiterConfigurationProperties;
 import com.laidian.limiter.core.config.SystemEnv;
-import com.laidian.limiter.core.interceptor.IpLimiterInterceptor;
+import com.laidian.limiter.core.interceptor.IpQpsRateLimiter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -171,8 +171,8 @@ public class IpLimitFetcher {
 				}
 				if (r.getCode() == 0 && r.getData() != null) {
 					int ipDefaultMaxQps = Integer.parseInt(String.valueOf(r.getData()));
-					if (IpLimiterInterceptor.getPermitsPerSecondEachIp() != ipDefaultMaxQps) {
-						IpLimiterInterceptor.resetLimit(ipDefaultMaxQps);
+					if (IpQpsRateLimiter.getPermitsPerSecondEachIp() != ipDefaultMaxQps) {
+						IpQpsRateLimiter.resetLimit(ipDefaultMaxQps);
 					}
 				} else if (r.getCode() != 0) {
 					log.warn("获取IP黑名单发生异常，响应code：" + r.getCode() + "，响应Msg：" + r.getMsg());
@@ -218,8 +218,8 @@ public class IpLimitFetcher {
 						log.debug("完成更新IP黑名单.");
 					}
 
-					if (IpLimiterInterceptor.getPermitsPerSecondEachIp() != ipConfig.getDefaultIpMaxQps()) {
-						IpLimiterInterceptor.resetLimit(ipConfig.getDefaultIpMaxQps());
+					if (IpQpsRateLimiter.getPermitsPerSecondEachIp() != ipConfig.getDefaultIpMaxQps()) {
+						IpQpsRateLimiter.resetLimit(ipConfig.getDefaultIpMaxQps());
 						log.debug("完成更新IP的默认最大QPS.");
 					}
 				} else if (r.getCode() != 0) {

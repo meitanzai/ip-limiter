@@ -1,4 +1,4 @@
-package com.laidian.limiter.core.interceptor;
+package com.laidian.limiter.core.web.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,9 +12,10 @@ import com.laidian.limiter.common.util.IpHelper;
 import com.laidian.limiter.common.vo.BlackIpVO;
 import com.laidian.limiter.common.vo.WhiteIpVO;
 import com.laidian.limiter.core.cache.IpCacheHelper;
-import com.laidian.limiter.core.handler.OverLimitAccessClientHandler;
+import com.laidian.limiter.core.interceptor.IpQpsRateLimiter;
 import com.laidian.limiter.core.service.BlackIpService;
 import com.laidian.limiter.core.service.WhiteIpService;
+import com.laidian.limiter.core.web.handler.OverLimitAccessClientHandler;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,8 +26,6 @@ public class IpLimiterInterceptor implements HandlerInterceptor {
 	private static IpCacheHelper ipCacheHelper;
 	private static int permitsPerSecondEachIp = 50;
 
-	private static IpQpsRateLimiter ipQpsRateLimiter = null;
-
 	private static BlackIpService blackIpService;
 
 	private static WhiteIpService whiteIpService;
@@ -34,7 +33,7 @@ public class IpLimiterInterceptor implements HandlerInterceptor {
 	public IpLimiterInterceptor(String appName, int permitsPerSecondEachIp) {
 		this.appName = appName;
 		IpLimiterInterceptor.permitsPerSecondEachIp = permitsPerSecondEachIp;
-		ipQpsRateLimiter = new IpQpsRateLimiter(IpLimiterInterceptor.permitsPerSecondEachIp, ipCacheHelper);
+		IpQpsRateLimiter.initIpQpsRateLimiter(IpLimiterInterceptor.permitsPerSecondEachIp, ipCacheHelper);
 	}
 
 	public IpLimiterInterceptor(String appName, IpCacheHelper ipCacheHelper, int permitsPerSecondEachIp,
@@ -44,7 +43,7 @@ public class IpLimiterInterceptor implements HandlerInterceptor {
 		IpLimiterInterceptor.permitsPerSecondEachIp = permitsPerSecondEachIp;
 		IpLimiterInterceptor.blackIpService = blackIpService;
 		IpLimiterInterceptor.whiteIpService = whiteIpService;
-		ipQpsRateLimiter = new IpQpsRateLimiter(IpLimiterInterceptor.permitsPerSecondEachIp, ipCacheHelper);
+		IpQpsRateLimiter.initIpQpsRateLimiter(IpLimiterInterceptor.permitsPerSecondEachIp, ipCacheHelper);
 	}
 
 	/**
@@ -96,7 +95,7 @@ public class IpLimiterInterceptor implements HandlerInterceptor {
 			 * 过设置的最大的访问行为ＱＰＳ数据，如最大ＱＰＳ为５０，有时会看到为实际记录的为５１、５１等，<br>
 			 * 这么做的目的也是为了提升访问的效率，后续也可以对该处理进行优化。<br>
 			 */
-			if (ipQpsRateLimiter.tryAquire(ip, url)) {
+			if (IpQpsRateLimiter.getIntance().tryAquire(ip, url)) {
 				return true;
 			} else {
 				try {
@@ -111,24 +110,6 @@ public class IpLimiterInterceptor implements HandlerInterceptor {
 			log.error("IP访问纬度数据的收集发生了异常：" + e.getMessage(), e);
 			return true;
 		}
-	}
-
-	/**
-	 * 重新设置Limit
-	 * 
-	 * @param limiterCache
-	 */
-	public static void resetLimit(int permitsPerSecondEachIp) {
-		IpLimiterInterceptor.permitsPerSecondEachIp = permitsPerSecondEachIp;
-		ipQpsRateLimiter = new IpQpsRateLimiter(permitsPerSecondEachIp, ipCacheHelper);
-	}
-
-	public static int getPermitsPerSecondEachIp() {
-		return permitsPerSecondEachIp;
-	}
-
-	public static void setPermitsPerSecondEachIp(int permitsPerSecondEachIp) {
-		IpLimiterInterceptor.permitsPerSecondEachIp = permitsPerSecondEachIp;
 	}
 
 }

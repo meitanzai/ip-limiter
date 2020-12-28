@@ -4,7 +4,7 @@
 
 	<groupId>com.laidian.limiter</groupId>
 	<artifactId>ip-limiter-core</artifactId>
-	<version>1.0.8</version>
+	<version>1.0.9</version>
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>com.laidian.limiter</groupId>
 			<artifactId>ip-limiter-common</artifactId>
-			<version>1.0.7</version>
+			<version>1.0.9</version>
 		</dependency>
 		
 		<dependency>

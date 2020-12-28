@@ -23,7 +23,10 @@ import com.laidian.limiter.core.cache.IpCacheHelper;
  *
  */
 public class IpQpsRateLimiter {
-	private int permitsPerSecondEachIp = 0;
+
+	private static IpQpsRateLimiter instance;
+
+	private static int permitsPerSecondEachIp = 0;
 	private IpCacheHelper ipCacheHelper;
 
 	/**
@@ -31,9 +34,44 @@ public class IpQpsRateLimiter {
 	 * @param permitsPerSecondEachIp 单个IP默认的最大的QPS
 	 * @param ipCacheHelper          ＩＰ请求访问记录内存缓存操作类
 	 */
-	public IpQpsRateLimiter(int permitsPerSecondEachIp, IpCacheHelper ipCacheHelper) {
-		this.permitsPerSecondEachIp = permitsPerSecondEachIp;
+	private IpQpsRateLimiter(int permitsPerSecondEachIp, IpCacheHelper ipCacheHelper) {
+		IpQpsRateLimiter.permitsPerSecondEachIp = permitsPerSecondEachIp;
 		this.ipCacheHelper = ipCacheHelper;
+	}
+
+	/**
+	 * 
+	 * @param permitsPerSecondEachIp 单个IP默认的最大的QPS
+	 * @param ipCacheHelper          ＩＰ请求访问记录内存缓存操作类
+	 */
+	public static void initIpQpsRateLimiter(int permitsPerSecondEachIp, IpCacheHelper ipCacheHelper) {
+		IpQpsRateLimiter ipQpsRateLimiter = new IpQpsRateLimiter(permitsPerSecondEachIp, ipCacheHelper);
+		instance = ipQpsRateLimiter;
+	}
+	
+	/**
+	 * 重新设置Limit
+	 * 
+	 * @param limiterCache
+	 */
+	public static void resetLimit(int permitsPerSecondEachIp) {
+		IpQpsRateLimiter.permitsPerSecondEachIp = permitsPerSecondEachIp;
+	}
+
+	/**
+	 * 获取IpQpsRateLimiter实例
+	 * 
+	 * @return
+	 */
+	public static IpQpsRateLimiter getIntance() {
+		if(instance==null) {
+			throw new RuntimeException("IpQpsRateLimiter实例未被初使化，请先调用方法initIpQpsRateLimiter初使化实例.");
+		}
+		return instance;
+	}
+	
+	public static int getPermitsPerSecondEachIp() {
+		return permitsPerSecondEachIp;
 	}
 
 	/**

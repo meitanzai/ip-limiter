@@ -11,6 +11,8 @@
     <modules>
         <module>ip-limiter-common</module>
 	<module>ip-limiter-core</module>
+	<module>ip-limiter-core-web</module>
+	<module>ip-limiter-core-spring-gateway</module>
         <module>ip-limiter-dashboard</module>
     </modules>
 
