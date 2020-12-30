@@ -10,6 +10,7 @@ import org.ehcache.jsr107.EhcacheCachingProvider;
 import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.util.ResourceUtils;
 
 @Configuration
@@ -39,14 +40,15 @@ public class CacheConfiguration {
 		return cache;
 	}
 	
-	@Bean
-	public org.springframework.cache.CacheManager cacheManager() throws URISyntaxException, FileNotFoundException {
+	@Primary
+	@Bean("ehCacheCacheManager") 
+	public org.springframework.cache.CacheManager ehcache3CacheManager() throws URISyntaxException, FileNotFoundException {
 		/* 创建springCacheManager接口的具体实现类，参数是javax下面的CacheManager实现类 */
-		return new JCacheCacheManager(jCacheManager());
+		return new JCacheCacheManager(ehcache3JCacheManager());
 	}
 
 	@Bean
-	public javax.cache.CacheManager jCacheManager() throws URISyntaxException, FileNotFoundException {
+	public javax.cache.CacheManager ehcache3JCacheManager() throws URISyntaxException, FileNotFoundException {
 
 		// ehcache实现了javax的CachingProvider接口的具体实现
 		EhcacheCachingProvider ehcacheCachingProvider = new EhcacheCachingProvider();

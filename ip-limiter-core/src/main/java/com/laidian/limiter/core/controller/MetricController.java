@@ -49,7 +49,7 @@ public class MetricController {
 	@ResponseBody
 	@RequestMapping("/getLastSecondIpSecondAccess")
 	public Result<Map<String, TreeMap<String, AccessVO>>> getLastSecondIpSecondAccess() {
-		log.info("getLastSecondIpSecondAccess is accessed.");
+		log.debug("getLastSecondIpSecondAccess is accessed.");
 		Map<String, TreeMap<String, AccessVO>> result = new HashMap<String, TreeMap<String, AccessVO>>();
 		Map<String, HashMap<Long, AccessVO>> map;
 		Object obj = commonCache.get(Constants.LocalCacheKey.LAST_SECOND_IPS_ACCESSMAP);
@@ -140,7 +140,7 @@ public class MetricController {
 	@RequestMapping("/getIpSecondAccess")
 	public Result<Map<String, TreeMap<String, AccessVO>>> getAllIpSecondAccessPretty(
 			@RequestParam(required = false, defaultValue = "0") Integer lastSeconds) {
-		log.info("获取秒纬度存储的访问数据,lastSeconds={}",lastSeconds);
+		log.debug("获取秒纬度存储的访问数据,lastSeconds={}",lastSeconds);
 		Map<String, TreeMap<String, AccessVO>> result = new HashMap<String, TreeMap<String, AccessVO>>();
 		try {
 			long currentTimeSeconds = TimeUtil.currentTimeSeconds();
@@ -161,7 +161,7 @@ public class MetricController {
 					result.put(k, treeMap);
 				}
 			});
-			log.info("秒纬度存储的访问数据:{}",result);
+			log.debug("秒纬度存储的访问数据:{}",result);
 			return Result.ofSuccess(result);
 		} catch (Exception e) {
 			log.error("获取秒纬度的统计数据发生异常:" + e.getMessage(), e);

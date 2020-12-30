@@ -4,7 +4,7 @@
 
 	<groupId>com.laidian.limiter</groupId>
 	<artifactId>ip-limiter-core-spring-gateway</artifactId>
-	<version>1.0.9</version>
+	<version>1.0.10</version>
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -46,7 +46,7 @@
 		<dependency>
 			<groupId>com.laidian.limiter</groupId>
 			<artifactId>ip-limiter-core</artifactId>
-			<version>1.0.9</version>
+			<version>1.0.10</version>
 		</dependency>
         
         <dependency>
