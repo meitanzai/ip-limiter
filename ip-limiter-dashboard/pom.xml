@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<groupId>com.laidian.limiter</groupId>
+	<groupId>com.eeefff.limiter</groupId>
 	<artifactId>ip-limiter-dashboard</artifactId>
-	<version>1.0.10</version>
+	<version>1.1.0</version>
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -83,15 +83,9 @@
 			<version>1.1.9</version>
 		</dependency>
 		<dependency>
-			<groupId>com.laidian.limiter</groupId>
+			<groupId>com.eeefff.limiter</groupId>
 			<artifactId>ip-limiter-core-web</artifactId>
-			<version>1.0.10</version>
-		</dependency>
-		<!-- 提供健康检查的接口 -->
-		<dependency>
-			<groupId>com.imlaidian.leishen.common.monitor</groupId>
-			<artifactId>ld-monitor-interface</artifactId>
-			<version>${ld-monitor-interface.version}</version>
+			<version>1.1.0</version>
 		</dependency>
 
 		<!-- lombok -->
@@ -147,7 +141,7 @@
 				<configuration>
 					<fork>true</fork>
 					<!--配置入口 -->
-					<mainClass>com.laidian.limiter.dashboard.Application</mainClass>
+					<mainClass>com.eeefff.limiter.dashboard.Application</mainClass>
 				</configuration>
 				<executions>
 					<execution>

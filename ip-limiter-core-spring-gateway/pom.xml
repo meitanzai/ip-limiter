@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<groupId>com.laidian.limiter</groupId>
+	<groupId>com.eeefff.limiter</groupId>
 	<artifactId>ip-limiter-core-spring-gateway</artifactId>
-	<version>1.0.10</version>
+	<version>1.1.0</version>
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -44,9 +44,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.laidian.limiter</groupId>
+			<groupId>com.eeefff.limiter</groupId>
 			<artifactId>ip-limiter-core</artifactId>
-			<version>1.0.10</version>
+			<version>1.1.0</version>
 		</dependency>
         
         <dependency>

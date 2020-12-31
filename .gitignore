@@ -57,3 +57,6 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
+ip-limiter-samples/ip-limiter-spring-mvc-sample/target
+ip-limiter-samples/ip-limiter-spring-boot-sample/target
+ip-limiter-samples/ip-limiter-spring-gateway-sample/target
