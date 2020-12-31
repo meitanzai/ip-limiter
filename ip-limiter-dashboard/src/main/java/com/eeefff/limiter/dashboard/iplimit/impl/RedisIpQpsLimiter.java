@@ -7,11 +7,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.laidian.erp.redis.spring.boot.RedisTemplateWrapper;
 import com.eeefff.limiter.common.util.AppUtil;
 import com.eeefff.limiter.common.vo.IpLimitVO;
 import com.eeefff.limiter.dashboard.constants.RedisKey;
 import com.eeefff.limiter.dashboard.iplimit.IpQpsLimiter;
+import com.eeefff.limiter.dashboard.redis.RedisTemplateWrapper;
 
 /**
  * 拉取全局的IP限流配置

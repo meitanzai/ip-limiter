@@ -12,11 +12,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.laidian.erp.redis.spring.boot.RedisTemplateWrapper;
 import com.eeefff.limiter.common.vo.AccessVO;
 import com.eeefff.limiter.dashboard.config.IpLimiterDashboardConfigurationProperties;
 import com.eeefff.limiter.dashboard.constants.RedisKey;
 import com.eeefff.limiter.dashboard.metric.AccessMetricHandler;
+import com.eeefff.limiter.dashboard.redis.RedisTemplateWrapper;
 
 import lombok.extern.slf4j.Slf4j;
 

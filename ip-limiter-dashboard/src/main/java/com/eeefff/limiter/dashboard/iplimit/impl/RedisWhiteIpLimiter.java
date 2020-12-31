@@ -6,11 +6,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.laidian.erp.redis.spring.boot.RedisTemplateWrapper;
 import com.eeefff.limiter.common.util.AppUtil;
 import com.eeefff.limiter.common.vo.WhiteIpVO;
 import com.eeefff.limiter.dashboard.constants.RedisKey;
 import com.eeefff.limiter.dashboard.iplimit.WhiteIpLimiter;
+import com.eeefff.limiter.dashboard.redis.RedisTemplateWrapper;
 
 /**
  * ＩＰ白名单操作服务类

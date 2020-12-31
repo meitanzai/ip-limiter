@@ -8,12 +8,12 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.laidian.erp.redis.spring.boot.RedisTemplateWrapper;
 import com.eeefff.limiter.common.action.RetryAction;
 import com.eeefff.limiter.common.util.RetryHelper;
 import com.eeefff.limiter.common.vo.Client;
 import com.eeefff.limiter.dashboard.client.IClientService;
 import com.eeefff.limiter.dashboard.constants.RedisKey;
+import com.eeefff.limiter.dashboard.redis.RedisTemplateWrapper;
 
 import lombok.extern.slf4j.Slf4j;
 

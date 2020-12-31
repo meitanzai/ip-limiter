@@ -4,13 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.laidian.erp.redis.spring.boot.RedisTemplateWrapper;
 import com.eeefff.limiter.common.util.HttpClientUtil;
 import com.eeefff.limiter.common.util.RetryHelper;
 import com.eeefff.limiter.common.vo.Result;
 import com.eeefff.limiter.dashboard.config.IpLimiterDashboardConfigurationProperties;
 import com.eeefff.limiter.dashboard.constants.RedisKey;
 import com.eeefff.limiter.dashboard.master.IMasterService;
+import com.eeefff.limiter.dashboard.redis.RedisTemplateWrapper;
 
 import lombok.extern.slf4j.Slf4j;
 

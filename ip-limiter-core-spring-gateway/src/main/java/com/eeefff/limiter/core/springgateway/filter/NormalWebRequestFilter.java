@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2014 laidian. All Rights Reserved.
- * @author jiangchao
- * @date  2020-07-24 16:02
- */
 package com.eeefff.limiter.core.springgateway.filter;
 
 import org.springframework.beans.factory.annotation.Autowired;

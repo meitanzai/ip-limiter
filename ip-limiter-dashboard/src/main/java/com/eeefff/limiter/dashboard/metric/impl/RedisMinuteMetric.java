@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.laidian.erp.redis.spring.boot.RedisTemplateWrapper;
 import com.eeefff.limiter.common.util.AppUtil;
 import com.eeefff.limiter.common.util.DateUtil;
 import com.eeefff.limiter.common.util.TimeUtil;
 import com.eeefff.limiter.common.vo.AccessVO;
 import com.eeefff.limiter.dashboard.constants.RedisKey;
 import com.eeefff.limiter.dashboard.metric.IMetric;
+import com.eeefff.limiter.dashboard.redis.RedisTemplateWrapper;
 
 /**
  * 从Redis中获取当前应用集群以分钟为纬度的统计数据
