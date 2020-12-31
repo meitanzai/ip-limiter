@@ -58,7 +58,7 @@
 #### 四、存储设计
 系统默认设计只会保存最多一个小时的访问纬度数据，且每个应用的数据是存放在单的hashkey中的，因而单个应用数据量不大，且了访问上的高效性，此处就默认使用Redis做为存储，也支持扩展为使用其它的存储。
 
-1. black-ips
+ **1. black-ips** 
 用于存储全局黑名单IP的Key，存储结构为Hash，HashKey为IP，HashValue为对象com.laidian.limiter.common.vo.BlackIpVO，其定义的字段如下：
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/181916_7ec06ae2_306225.png "c7f707069f4ee8cba555071afc437162.png")
@@ -67,7 +67,7 @@
 
 每个应用的IP黑名单数据都会单独存储到不同的Key中，其命名规则为"应用名称-black-ips"，如IP限制平台控制台的IP黑名单数据，保存的Key为：ip-limiter-dashboard-black-ips；
 
-2. white-ips
+ **2. white-ips** 
 用于存储全局白名单IP的Key，存储结构为Hash，HashKey为IP，HashValue为对象com.laidian.limiter.common.vo.WhiteIpVO，其定义的字段如下：
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/181935_423ed591_306225.png "8e94d98285f75dbcee6b5dbfd1daa1a9.png")
@@ -76,7 +76,7 @@
 
 每个应用的IP白名单数据都会单独存储到不同的Key中，其命名规则为"应用名称-white-ips"，如IP限制平台控制台的IP白名单数据，保存的Key为：ip-limiter-dashboard-white-ips；
 
-3. minute-access
+ **3. minute-access** 
 用于存储所有接入了IP限流平台的应用客户端的每分钟的访问统计汇总的Key，存储结构为Hash，HashKey为代表访问的分钟，HashValue为对象List，com.laidian.limiter.common.vo.AccessVO定义的字段如下：
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/181952_2768bfae_306225.png "f9629ac5adb233a90a82686825374848.png")
@@ -87,7 +87,7 @@
 
 每个应用每个节点的的分钟访问纬度数据都会单独存储到不同的Key中，其命名规则为"应用名称-ip及端口-minute-access"，如IP限制平台控制台的分钟访问纬度数据，保存的Key为：ip-limiter-dashboard-127.0.0.1:20520-minute-access；
 
-4. ip-limit
+ **4. ip-limit** 
 用于存储全局IP QPS设置的Key，存储结构为Hash，HashKey为IP，HashValue为对象com.laidian.limiter.common.vo.IpLimitVO，其定义的字段如下：
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/182017_514cc4cc_306225.png "bb44e9662ec695a2632ea2d538a17240.png")
@@ -96,15 +96,15 @@
 
 每个应用的IP QPS设置数据都会单独存储到不同的Key中，其命名规则为"应用名称-ip-limit"，如IP限制平台控制台的IP白名单数据，保存的Key为：ip-limiter-dashboard-ip-limit；
 
-5. registered-clients
+ **5. registered-clients** 
 用于存储注册到IP限流平台管理控制台的Key，存储结构为Hash，HashKey为应用名称，HashValue为对象Map，用于存储该应用所有注册的客户端，Map的Key为应用客户端的IP+端口，com.laidian.limiter.common.vo.Client对定义的字段如下：
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/182034_dc06f189_306225.png "46b585047d9f13b93bdbb3a044fc789c.png")
 
-6. ip-limiter-dashboard-master
+ **6. ip-limiter-dashboard-master** 
 用于存储IP限流平台的Master节点的Key，存储结构为普通的字符串，其值为当前master节点的IP+端口。
 
-7. permitsPerSecondEachIp
+ **7. permitsPerSecondEachIp** 
 用于存储每个ＩＰ默认的最大ＱＰＳ值的Key，存储结构为普通的数字，其值为当每个ＩＰ默认的最大ＱＰＳ值。
 
 注：
