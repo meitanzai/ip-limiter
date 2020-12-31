@@ -27,12 +27,15 @@
 
 #### 二、架构
 1. 交互架构
+
 ![ＩＰ限流平台交互架构](https://images.gitee.com/uploads/images/2020/1231/181209_ad1ef1db_306225.png "962ebe8c87cfb79393e4faaa7e50b47a (1).png")
 
 2. 实现架构
+
 ![IP限流平台架构图](https://images.gitee.com/uploads/images/2020/1230/174256_2b6b8f8c_306225.png "20201111144948719 (1).png")
 
 3. 系统模块
+
 - 收集访问纬度数据的Agent模块，需要应用集成；
 - 用于查看及管理的控制台模块，控制台模块为Master/Slave架构，Master用于执行定时任务、对节点进行检查、检查系统收集的IP黑名单情况等；
 
