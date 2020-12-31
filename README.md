@@ -355,34 +355,147 @@ ip.limiter.core.dashboardAddress = 127.0.0.1:8080
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/193715_0dbf879a_306225.png "585204121c8ec2c6d1a540d595858168.png")
 
+####  **六、IP限流平台的搭建** 
+ **1. 下载源码并安排** 
 
+```
+git clone https://gitee.com/laofeng/ip-limiter.git
+cd ip-limiter
+```
 
+ **2. 修改必要的核心配置文件** 
 
-#### 安装教程
+首先需要启动IP限流控制台，IP限流控制台默认使用Redis做为存储，因而需要先对Redis进行配置，否则应用运行时会报错，修改ＩＰ控制台的核心配置文件ip-limiter-dashboard/src/main/resources/application.properties，只需要修改其中的redis配置，其它的都可以使用默认值，如下所示：
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+```
+spring.redis.host = 192.168.12.111
+spring.redis.port = 6379
+spring.redis.password = 8lFvrZh7d7Ik8LtNwpBMakleishen
+spring.redis.database = 12
+spring.redis.timeout = 5000
+spring.redis.jedis.pool.max-idle = 8
+spring.redis.jedis.pool.min-idle = 0
+spring.redis.jedis.pool.max-wait = 8
+spring.redis.jedis.pool.max-active = 20
+```
 
-#### 使用说明
+ **3. 启动IP限流平台控制台** 
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+```
+cd ip-limiter-dashboard
+./start.sh
+```
 
-#### 参与贡献
+注：启动会报一些与Apollo相关的警告，可以不用理会，这个是方便配置后续接入Apollo的，如果实在是不喜欢，可以在pom中删除Apollo的引入，并且删除Apollo相关的代码即可。
+
+控制台访问地址：
+- 单个应用管理控制台地址：[http://localhost:127.0.0.1:8080/limiter](http://localhost:127.0.0.1:8080/limiter)
+- 全局应用管理控制台地址：[http://127.0.0.1:8080/global-limiter](http://127.0.0.1:8080/global-limiter)
+
+ **4. 启动演示应用** 
+
+演示应用的目录ip-limiter-samples，里面包括了三个演示应用，分别为：
+- ip-limiter-spring-boot-sample: 用于演示spring boot集用IP限流平台
+- ip-limiter-spring-mvc-sample: 用于演示普通的spring mvc应用集用IP限流平台
+- ip-limiter-spring-gateway-sample: 用于演示spring gateway集用IP限流平台
+
+这三种应用类型应该包含了大部份的应用类型，每种应用都有自己的一些不同的集成方式及特点。
+
+ **１）启动ip-limiter-spring-boot-sample** 
+
+首先进入ip-limiter-spring-boot-sample目录，通过以下命令启动：
+
+```
+./install.sh
+./start.sh
+```
+其默认的端口为10000，启动成功后，可以通过[http://localhost:10000/hello](http://localhost:10000/hello)访问验证，待控制台打印出往IP限流平台注册成功字样后，就可以在控制台的左上角的下拉框中看到该应用了。
+
+ **２）启动ip-limiter-spring-mvc-sample** 
+
+该演示应用为了启动上的方便，需要先在/etc/maven/setting.xml的pluginGroup中增加jetty的插件：
+
+```
+  <pluginGroups>
+    <pluginGroup>org.mortbay.jetty</pluginGroup>
+  </pluginGroups>
+```
+直接保存退出即可。
+
+然后进入ip-limiter-spring-mvc-sample目录，通过以下命令启动：
+
+```
+./runJetty.sh
+```
+启动的过程中可能会报一些Jetty的错误，这个不需要理会，待启动完成后其默认的端口为10001，启动成功后可以通过[http://localhost:10001/app/health](http://localhost:10001/app/health)访问验证，待控制台打印出往IP限流平台注册成功字样后，就可以在控制台的左上角的下拉框中看到该应用了。
+
+ **３）启动ip-limiter-spring-boot-sample** 
+
+首先进入ip-limiter-spring-boot-sample目录，通过以下命令启动：
+
+```
+./install.sh
+./start.sh
+```
+其默认的端口为10002，启动成功后，可以通过[http://localhost:10002/api_hello/hello](http://localhost:10002/api_hello/hello)访问验证，该请求实通过网关访问[http://localhost:10000/hello](http://localhost:10000/hello)，因而ip-limiter-spring-boot-sample需要先启动才可以验证该应用，待控制台打印出往IP限流平台注册成功字样后，就可以在控制台的左上角的下拉框中看到该应用了。
+
+####  **七、应用的集成** 
+
+目前应用的最新版本为1.1.0。
+
+1. Spring Boot应用的集成
+
+引入限流依赖的客户端starter核心模块
+
+```
+		<dependency>
+		    <groupId>com.laidian.limiter</groupId>
+		    <artifactId>ip-limiter-core-web</artifactId>
+		    <version>${ip-limiter-core.version}</version>
+		</dependency>
+```
+其它的什么也不用做了，方便吧@_@。
+
+2. Spring MVC应用的集成
+
+Spring MVC应用的接入就会多一些步骤，不过也不麻烦。
+１）引入限流依赖的客户端starter核心模块
+
+```
+		<dependency>
+		    <groupId>com.laidian.limiter</groupId>
+		    <artifactId>ip-limiter-core-web</artifactId>
+		    <version>${ip-limiter-core.version}</version>
+		</dependency>
+```
+
+２）将IP限流平台的包加入扫描及增加Inteceptor
+
+因为IP限流平台是基于Inteceptor的，在Spring的配置文件中增加如下配置：
+```
+<context:component-scan base-package="com.eeefff.limiter"></context:component-scan>
+<mvc:interceptors>
+    <ref bean="ipLimiterInterceptor" />
+</mvc:interceptors>
+```
+如果遇到了集成上的问题，可以参考ip-limiter-spring-mvc-sample示例应用。
+
+3. Spring Gateway的集成
+
+Spring Gateway使用的是Netty做为通信模块，不能够像其它应用一样使用Inteceptor来实现，需要使用其本身的GlobalFilter结合ＷebFilter来实现，因而需要集成不同的包：
+```
+		<dependency>
+		    <groupId>com.laidian.limiter</groupId>
+		    <artifactId>ip-limiter-core-spring-gateway</artifactId>
+		    <version>${ip-limiter-core.version}</version>
+		</dependency>
+```
+和普通的Spring Boot应用一样，也是不需要做任何事情，就是这么简单。
+
+####  **参与贡献** 
 
 1.  Fork 本仓库
 2.  新建 Feat_xxx 分支
 3.  提交代码
 4.  新建 Pull Request
 
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
