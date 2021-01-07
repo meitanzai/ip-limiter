@@ -159,6 +159,9 @@ public class IpAccessReporter {
 			if (ipAccessMap.isEmpty()) {
 				cache.remove(e.getKey());
 			}
+			if(CollectionUtils.isEmpty(ipAccessMap.keySet())) {
+				return;
+			}
 			Set<Long> seconds = new TreeSet<Long>();
 			// 保存该ＩＰ访问对应的所有秒
 			seconds.addAll(ipAccessMap.keySet());

@@ -27,7 +27,7 @@
 	<dependency>
 	    <groupId>com.eeefff.limiter</groupId>
 	    <artifactId>ip-limiter-core-web</artifactId>
-	    <version>1.1.0</version>
+	    <version>1.1.1</version>
 	</dependency>
 	<!-- lombok -->
         <dependency>

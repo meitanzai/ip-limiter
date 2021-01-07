@@ -148,6 +148,7 @@ public class ClientController {
 		log.info("（分纬度）应用 " + appName + " 上报的访问数据.");
 		log.debug("（分纬度）应用 " + appName + " 上报的数据：" + metric.toString());
 		try {
+			// 外层Map的Key为IP，内层Map的Key为代表访问时间的分
 			Map<String, HashMap<Long, AccessVO>> metricMap = JSON.parseObject(metric,
 					new TypeReference<Map<String, HashMap<Long, AccessVO>>>() {
 					});

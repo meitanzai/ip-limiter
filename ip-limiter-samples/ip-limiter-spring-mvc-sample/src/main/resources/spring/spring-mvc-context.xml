@@ -21,11 +21,6 @@
 	<context:component-scan base-package="com.eeefff.limiter"></context:component-scan>
 	<!-- 启用aop -->
 	<aop:aspectj-autoproxy expose-proxy="true"></aop:aspectj-autoproxy>
-	<!-- 采用注解方式扫描该包下所有含有org.springframework.stereotype.Controller注解的类 -->
-	<context:component-scan base-package="com.eeefff.limiter.test.controller,com.eeefff.limiter.core.controller" >
-		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController"/>
-	</context:component-scan>
 	 <mvc:interceptors>
 	 	<ref bean="ipLimiterInterceptor" />
 	</mvc:interceptors>

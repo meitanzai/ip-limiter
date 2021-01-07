@@ -75,7 +75,11 @@ public class HttpClientUtil {
 			}
 		} catch (Exception e) {
 			httpGet.abort();
-			log.error("执行Get请求发生异常:" + e.getMessage() + ", url:" + url, e);
+			if (url.endsWith("/health/check")) {
+				log.warn("对url:" + url + "执行健康检查发生异常，该节点当前不可用。");
+			} else {
+				log.error("执行Get请求发生异常:" + e.getMessage() + ", url:" + url, e);
+			}
 		}
 	}
 
