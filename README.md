@@ -501,4 +501,4 @@ Spring Gateway使用的是Netty做为通信模块，不能够像其它应用一�
 
 加入组织：
 
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/204354_630819e6_306225.png "2020-12-31 20-43-08屏幕截图.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0108/111307_ead43654_306225.jpeg "Screenshot_2021-01-08-11-10-56-174_com.tencent.mm.jpg")
