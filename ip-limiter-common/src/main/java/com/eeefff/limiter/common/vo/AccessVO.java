@@ -1,8 +1,8 @@
 package com.eeefff.limiter.common.vo;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.alibaba.fastjson.JSON;
@@ -39,9 +39,9 @@ public class AccessVO implements Serializable {
 	private String currentDate;
 	// 当前统计的IP
 	private String ip;
-	// 访问的Url的情况，每个Url在这个时间段之内补访问的次数
+	// 访问的Url的情况，每个Url在这个时间段之内被访问的次数
 	@Default
-	private Map<String, AtomicInteger> urlsAccess = new HashMap<String, AtomicInteger>();
+	private Map<String, AtomicInteger> urlsAccess = new ConcurrentHashMap<String, AtomicInteger>();
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private String urlsAccessStr;
 	

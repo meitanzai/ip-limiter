@@ -83,7 +83,7 @@ public class MinuteIpCacheHelper implements IpAccessCache {
 				}
 			}
 		} else {
-			accessVO.getUrlsAccess().get(url).incrementAndGet();
+			urlAccess.incrementAndGet();
 		}
 		return true;
 	}
