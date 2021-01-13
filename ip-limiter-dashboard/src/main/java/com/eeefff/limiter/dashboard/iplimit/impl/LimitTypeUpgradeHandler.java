@@ -16,6 +16,7 @@ import com.eeefff.limiter.common.enumeration.BlackIpAddType;
 import com.eeefff.limiter.common.enumeration.BlackIpLimitType;
 import com.eeefff.limiter.common.vo.AccessVO;
 import com.eeefff.limiter.common.vo.BlackIpVO;
+import com.eeefff.limiter.dashboard.config.IpLimiterDashboardConfigurationProperties;
 import com.eeefff.limiter.dashboard.iplimit.BlackIpLimiter;
 import com.eeefff.limiter.dashboard.iplimit.OverLimitAccessHandler;
 
@@ -31,6 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 public class LimitTypeUpgradeHandler extends OverLimitAccessHandler {
 	@Autowired
 	private BlackIpLimiter blackIpLimiter;
+	@Autowired
+	private IpLimiterDashboardConfigurationProperties ipLimiterDashboardConfigurationProperties;
 
 	@Override
 	@Async
@@ -40,7 +43,11 @@ public class LimitTypeUpgradeHandler extends OverLimitAccessHandler {
 		}
 		Set<String> blockAccessIpList = new HashSet<String>();
 		topAccessMetricList.forEach(v -> {
-			if (v.getBlock().intValue() > 0) {// 判决ＩＰ是否有超限访问
+			if ((v.getBlock().intValue() > 0) && (v.getBlock().intValue()
+					/ v.getNormal().intValue() > ipLimiterDashboardConfigurationProperties.getOverAccessLimitRate())) {// 判断ＩＰ是否有超限访问
+				log.warn("IP：" + v.getIp() + "超限访问超过正常流量的:"
+						+ (100 * ipLimiterDashboardConfigurationProperties.getOverAccessLimitRate())
+						+ "%，现将其加入到限制访问策略中.");
 				blockAccessIpList.add(v.getIp());
 			}
 		});

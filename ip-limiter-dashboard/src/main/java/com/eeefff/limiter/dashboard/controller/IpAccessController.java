@@ -1,8 +1,10 @@
 package com.eeefff.limiter.dashboard.controller;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
@@ -90,18 +92,22 @@ public class IpAccessController {
 	 * 获取指定服务器最近一段时间秒纬度的访问统计数据
 	 * 
 	 * @param model
-	 * @param appName     需要获取访问统计的应用名称
-	 * @param ip          应用的ＩＰ
+	 * @param appName         需要获取访问统计的应用名称
+	 * @param ip              应用的ＩＰ
 	 * @param ts
-	 * @param lastSeconds
+	 * @param lastSeconds     展示最新的多少秒钟的数据，不传则展示最近１分钟的全部秒维度的访问数据
+	 * @param refreshInterval 网页上页面的刷新频率
+	 * @param displayType     展示的样式，s表示以秒做为主要统计展示维度，ip表示以ip做为主要统计展示维度，默认值为s
 	 * @return
 	 */
 	@RequestMapping("/getIpSecondAccessPretty")
 	public String getIpSecondAccessPretty(Model model, @RequestParam(required = false) String appName,
 			@RequestParam(required = false) String ip, @RequestParam(required = false) String ts,
 			@RequestParam(required = false, defaultValue = "10") Integer lastSeconds,
-			@RequestParam(required = false, defaultValue = "5") Integer refreshInterval) {
+			@RequestParam(required = false, defaultValue = "5") Integer refreshInterval,
+			@RequestParam(required = false, defaultValue = "s") String displayType) {
 		log.debug("调用接口getIpSecondAccessPretty的参数,appName={},ip={},ts={},lastSeconds={}", appName, ip, ts, lastSeconds);
+		// 外层Key为IP，内层Key为时间秒
 		Map<String, TreeMap<String, AccessVO>> sencondsAccessMetric = new HashMap<String, TreeMap<String, AccessVO>>();
 		if (StringUtils.isEmpty(appName)) {
 			sencondsAccessMetric.putAll(getAllIpSecondAccess());
@@ -131,13 +137,44 @@ public class IpAccessController {
 				});
 			}
 		}
-		model.addAttribute("secondsAccess", sencondsAccessMetric);
+		if ("s".equals(displayType)) {
+			// 外层Key为时间秒，内层Key为IP
+			TreeMap<String, HashMap<String, AccessVO>> sMap = new TreeMap<String, HashMap<String, AccessVO>>(new Comparator<String>() {
+				@Override
+				public int compare(String o1, String o2) {
+					if(o1.compareTo(o2)>0) {
+						return -1;
+					}else if(o1.compareTo(o2)<0) {
+						return 1;
+					}
+					return 0;
+				}
+				
+			});
+			sencondsAccessMetric.forEach((k, v) -> {
+				v.forEach((k1, v1) -> {
+					HashMap<String, AccessVO> map = Optional.ofNullable(sMap.get(k1)).orElseGet(() -> {
+						HashMap<String, AccessVO> m = new HashMap<String, AccessVO>();
+						sMap.put(k1, m);
+						return m;
+					});
+					map.put(k, v1);
+				});
+			});
+			model.addAttribute("secondsAccess", sMap);
+		} else {
+			model.addAttribute("secondsAccess", sencondsAccessMetric);
+		}
 		model.addAttribute("ip", ip);
 		model.addAttribute("lastSeconds", lastSeconds);
 		model.addAttribute("refreshInterval", refreshInterval);
 		model.addAttribute("appName", appName);
-
-		return "localSecondsData";
+		model.addAttribute("displayType", displayType);
+		if ("s".equals(displayType)) {
+			return "localSecondsDataS";
+		}else {
+			return "localSecondsData";
+		}
 	}
 
 	@ResponseBody

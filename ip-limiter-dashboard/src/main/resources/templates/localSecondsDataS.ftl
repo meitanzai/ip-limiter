@@ -28,7 +28,7 @@
 		<option value ="20" <#if refreshInterval??><#if refreshInterval==20>selected</#if></#if>>20秒</option>
 		<option value ="30" <#if refreshInterval??><#if refreshInterval==30>selected</#if></#if>>30秒</option>
 	</select>
-	&nbsp;&nbsp;<a href="javascript:void(0)" onclick="showIpDisplayType()">以时间秒统计维度查看</a>
+	&nbsp;&nbsp;<a href="javascript:void(0)" onclick="showIpDisplayType()">以IP统计维度查看</a>
 	<input type="hidden" name="appName" id="appName" value="${appName!''}">
 	<input type="hidden" name="clientIp" id="clientIp" value="${ip!''}">
 	<input type="hidden" name="lastSeconds" id="lastSeconds" value="${lastSeconds!''}">
@@ -40,32 +40,30 @@
 			<td colspan="6" align="center" style="font-weight:bold">当前应用最近${lastSeconds!'10'}秒的IP访问TOP统计</td>
 		</tr>
 		<tr>
-			<td style="font-weight:bold;background-color:yellow" width="16%"><b>IP</b></td>
 			<td style="font-weight:bold;background-color:yellow" width="16%">统计时间</td>
+			<td style="font-weight:bold;background-color:yellow" width="16%"><b>IP</b></td>
 			<td style="font-weight:bold;background-color:yellow" width="16%">访问总量</td>
 			<td style="font-weight:bold;color:green;background-color:yellow" width="16%">正常访问总量</td>
 			<td style="font-weight:bold;color:red;background-color:yellow" width="16%">拒绝访问总量</td>
 			<td style="font-weight:bold;color:red;background-color:yellow" width="20%">操作</td>
 		</tr>
 		<#if secondsAccess??>
-		<#list secondsAccess?keys as ipKey>
+		<#list secondsAccess?keys as secondKey>
 		<#assign index=0>
-		<#assign secondAccess=secondsAccess[ipKey]>
-		<#list secondAccess?keys as secondKey>
-		<#assign access=secondAccess[secondKey]>
+		<#assign secondAccess=secondsAccess[secondKey]>
+		<#list secondAccess?keys as ipKey>
+		<#assign access=secondAccess[ipKey]>
 		<tr>
 			<#if index==0>
-			<td rowspan="${secondAccess?size}">${ipKey}</td>
-			</#if>
 			<#assign seconds=secondKey?number>
 			<#assign seconds=seconds*1000>
-			<td>${seconds?number_to_datetime?string("yyyy-MM-dd HH:mm:ss")}</td>
+			<td rowspan="${secondAccess?size}">${seconds?number_to_datetime?string("yyyy-MM-dd HH:mm:ss")}</td>
+			</#if>
+			<td>${ipKey}</td>
 			<td>${access.total}</td>
 			<td>${access.normal}</td>
 			<td>${access.block}</td>
-			<#if index==0>
-			<td rowspan="${secondAccess?size}"><a href="/limiter/addBlackIpPretty?ip=${ipKey}">IP加入黑名单</a></td>
-			</#if>
+			<td><a href="/limiter/addBlackIpPretty?ip=${ipKey}">IP加入黑名单</a></td>
 			<input type="hidden" name="urls" value="${access.urlsAccessStr}">
 		</tr>
 		<#assign index=index+1>
@@ -118,7 +116,7 @@
 	   var ts = new Date().getTime();
 	   var refreshInterval = document.getElementById("refreshInterval").value;
 	   var displayType = document.getElementById("displayType").value;
-	   window.location.href="/limiter/getIpSecondAccessPretty?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType=s";
+	   window.location.href="/limiter/getIpSecondAccessPretty?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType=ip";
 	}
 	var refreshInterval = document.getElementById("refreshInterval").value;
 	refreshInterval = refreshInterval * 1000;

@@ -45,4 +45,6 @@ public class IpLimiterDashboardConfigurationProperties {
 	// 检查由于超限访问的IP被系统自动加入到黑名单中的IP，并对其进行释放操作的频率，以分钟为单位
 	private int systemAddBlackIpCheckRate = 1;
 	
+	// 超限访问的请求　占比　正常访问请求的比例，如0.3表示占比超过30%，如达到该值或者超过该值，则将该ＩＰ加入到黑名单限制策略中
+	private float overAccessLimitRate = 0.3f;
 }
