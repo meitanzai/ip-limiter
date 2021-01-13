@@ -4,7 +4,7 @@
 	<#include "top_banner.ftl">
 	选择应用节点：
 	<select id="ipId" onchange="changeIp(this.value)">
-		
+		<option value ="">全部节点</option>
 	</select>
 	&nbsp;&nbsp;选择查看的时间：
 	<select id="lastSecondsId" name="lastSeconds" onchange="changeLastSeconds(this.value)">
@@ -80,7 +80,7 @@
 		var ts = new Date().getTime();
 		var refreshInterval = document.getElementById("refreshInterval").value;
 		var displayType = document.getElementById("displayType").value;
-		window.location.href="/limiter/getIpSecondAccessPretty?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType="+displayType;
+		window.location.href=window.location.pathname+"?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType="+displayType;
 	}
 	function changeLastSeconds(lastSeconds){
 		var appName = document.getElementById("appName").value;
@@ -88,7 +88,7 @@
 		var ts = new Date().getTime();
 		var refreshInterval = document.getElementById("refreshInterval").value;
 		var displayType = document.getElementById("displayType").value;
-		window.location.href="/limiter/getIpSecondAccessPretty?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType="+displayType;
+		window.location.href=window.location.pathname+"?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType="+displayType;
 	}
 	function changeRefreshInterval(refreshInterval){
 		var appName = document.getElementById("appName").value;
@@ -96,7 +96,7 @@
 		var ip = document.getElementById("ipId").value;
 		var ts = new Date().getTime();
 		var displayType = document.getElementById("displayType").value;
-		window.location.href="/limiter/getIpSecondAccessPretty?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType="+displayType;
+		window.location.href=window.location.pathname+"?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType="+displayType;
 	}
 	function page_refresh()
 	{
@@ -106,7 +106,7 @@
 	   var ts = new Date().getTime();
 	   var refreshInterval = document.getElementById("refreshInterval").value;
 	   var displayType = document.getElementById("displayType").value;
-	   window.location.href="/limiter/getIpSecondAccessPretty?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType="+displayType;
+	   window.location.href=window.location.pathname+"?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType="+displayType;
 	}
 	function showIpDisplayType()
 	{
@@ -116,7 +116,7 @@
 	   var ts = new Date().getTime();
 	   var refreshInterval = document.getElementById("refreshInterval").value;
 	   var displayType = document.getElementById("displayType").value;
-	   window.location.href="/limiter/getIpSecondAccessPretty?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType=ip";
+	   window.location.href=window.location.pathname+"?appName="+appName+"&ip="+ip+"&ts="+ts+"&lastSeconds="+lastSeconds+"&refreshInterval="+refreshInterval+"&displayType=ip";
 	}
 	var refreshInterval = document.getElementById("refreshInterval").value;
 	refreshInterval = refreshInterval * 1000;

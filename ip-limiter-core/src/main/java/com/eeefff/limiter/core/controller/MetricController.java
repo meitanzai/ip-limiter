@@ -158,7 +158,9 @@ public class MetricController {
 							treeMap.put(String.valueOf(k1), v1);
 						}
 					});
-					result.put(k, treeMap);
+					if(!CollectionUtils.isEmpty(treeMap)) {
+						result.put(k, treeMap);
+					}
 				}
 			});
 			log.debug("秒纬度存储的访问数据:{}",result);

@@ -1,11 +1,13 @@
 package com.eeefff.limiter.dashboard.controller;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,58 +103,107 @@ public class IpAccessController {
 	 * @return
 	 */
 	@RequestMapping("/getIpSecondAccessPretty")
-	public String getIpSecondAccessPretty(Model model, @RequestParam(required = false) String appName,
+	public String getAllIpSecondAccessPretty(Model model, @RequestParam(required = false) String appName,
 			@RequestParam(required = false) String ip, @RequestParam(required = false) String ts,
 			@RequestParam(required = false, defaultValue = "10") Integer lastSeconds,
 			@RequestParam(required = false, defaultValue = "5") Integer refreshInterval,
 			@RequestParam(required = false, defaultValue = "s") String displayType) {
 		log.debug("调用接口getIpSecondAccessPretty的参数,appName={},ip={},ts={},lastSeconds={}", appName, ip, ts, lastSeconds);
+		// 最外层Key为获取资源的IP及端口，第二层Key为IP，内层Key为时间秒
+		Map<String, Map<String, TreeMap<String, AccessVO>>> serverSencondsAccessMetric = new HashMap<String, Map<String, TreeMap<String, AccessVO>>>();
 		// 外层Key为IP，内层Key为时间秒
 		Map<String, TreeMap<String, AccessVO>> sencondsAccessMetric = new HashMap<String, TreeMap<String, AccessVO>>();
 		if (StringUtils.isEmpty(appName)) {
 			sencondsAccessMetric.putAll(getAllIpSecondAccess());
 		} else {
+			List<String> serverList = new ArrayList<String>();
+			ip = StringUtils.isEmpty(ip) ? "" : ip;
 			String server = ip;
 			if (StringUtils.isEmpty(server)) {
+				//没有指定要查看的服务节点，则获取所有的服务节点
 				List<String> appNameList = clientService.getAppRegisteredIps(appName);
 				if (!CollectionUtils.isEmpty(appNameList)) {
-					ip = server = appNameList.get(0);
+					serverList.addAll(appNameList);
 				}
+			} else {
+				serverList.add(server);
 			}
-			if (!StringUtils.isEmpty(server)) {
-				StringBuilder url = new StringBuilder("http://");
-				url.append(server).append("/ip-limiter/metric/getIpSecondAccess?lastSeconds=").append(lastSeconds);
-				HttpClientUtil.doGet(url.toString(), r -> {
-					if (r != null && r.getCode() == 0) {
-						Map<String, TreeMap<String, AccessVO>> map = JSON.parseObject(r.getData().toString(),
-								new TypeReference<Map<String, TreeMap<String, AccessVO>>>() {
-								});
-						if (CollectionUtils.isEmpty(map)) {
-							log.warn("获取远程秒访问纬度的响应内容为空，url为" + url);
+			if (!CollectionUtils.isEmpty(serverList)) {
+				serverList.parallelStream().forEach(s -> {
+					StringBuilder url = new StringBuilder("http://");
+					url.append(s).append("/ip-limiter/metric/getIpSecondAccess?lastSeconds=").append(lastSeconds);
+					HttpClientUtil.doGet(url.toString(), r -> {
+						if (r != null && r.getCode() == 0) {
+							Map<String, TreeMap<String, AccessVO>> map = JSON.parseObject(r.getData().toString(),
+									new TypeReference<Map<String, TreeMap<String, AccessVO>>>() {
+									});
+							if (CollectionUtils.isEmpty(map)) {
+								log.warn("获取远程秒访问纬度的响应内容为空，url为" + url);
+							}
+							// sencondsAccessMetric.putAll(map);
+							serverSencondsAccessMetric.put(s, map);
+							log.info("节点:"+s+"的响应数据："+map.toString());
+						} else {
+							log.warn("获取远程秒访问纬度发生异常，响应code：" + r.getCode() + "，响应Msg：" + r.getMsg() + "，URL:" + url);
 						}
-						sencondsAccessMetric.putAll(map);
-					} else {
-						log.warn("获取远程秒访问纬度发生异常，响应code：" + r.getCode() + "，响应Msg：" + r.getMsg() + "，URL:" + url);
-					}
+					});
 				});
+
 			}
 		}
+
+		serverSencondsAccessMetric.forEach((server, v) -> {// key为服务器的IP及端口，value为从该服务器获取的秒维度访问数据
+			v.forEach((ipKey, v1) -> {// key为ip，value为该ip对应不同秒的访问统计数据
+				Optional.ofNullable(sencondsAccessMetric.get(ipKey)).ifPresent((treeMapValue) -> {
+					// 能够进入下面的处理逻辑，则表示结果中已经包含了该IP对应的数据，则对相同的IP访问数据进行合并
+					v1.forEach((secondKey, v2) -> {
+						AccessVO vo = treeMapValue.get(secondKey);
+						if (vo == null) {// 现有的结果中没有包含当前k2代表的秒的数据，那就直接加上
+							treeMapValue.put(secondKey, v2);
+						} else {// 现有结果包含了当前k2代表的秒的数据，则需要对数据进行合并
+							vo.getBlock().addAndGet(v2.getBlock().intValue());
+							vo.getNormal().addAndGet(v2.getNormal().intValue());
+							vo.getTotal().addAndGet(v2.getTotal().intValue());
+							v2.getUrlsAccess().forEach((url, v3) -> {// key为访问的url，对访问的url进行统计合并
+								AtomicInteger urlAccess = vo.getUrlsAccess().get(url);
+								if (urlAccess == null) {
+									vo.getUrlsAccess().put(url, v3);
+								} else {
+									urlAccess.addAndGet(v3.intValue());
+								}
+							});
+						}
+					});
+
+				});
+				Optional.ofNullable(sencondsAccessMetric.get(ipKey)).orElseGet(() -> {
+					TreeMap<String, AccessVO> m = new TreeMap<String, AccessVO>();
+					m.putAll(v1);
+					sencondsAccessMetric.put(ipKey, m);
+					return m;
+				});
+
+			});
+		});
+
+		// 根据不同的展示类型，进行数据的数据，默认为以秒为统计维度进行展示
 		if ("s".equals(displayType)) {
 			// 外层Key为时间秒，内层Key为IP
-			TreeMap<String, HashMap<String, AccessVO>> sMap = new TreeMap<String, HashMap<String, AccessVO>>(new Comparator<String>() {
-				@Override
-				public int compare(String o1, String o2) {
-					if(o1.compareTo(o2)>0) {
-						return -1;
-					}else if(o1.compareTo(o2)<0) {
-						return 1;
-					}
-					return 0;
-				}
-				
-			});
-			sencondsAccessMetric.forEach((k, v) -> {
-				v.forEach((k1, v1) -> {
+			TreeMap<String, HashMap<String, AccessVO>> sMap = new TreeMap<String, HashMap<String, AccessVO>>(
+					new Comparator<String>() {
+						@Override
+						public int compare(String o1, String o2) {
+							if (o1.compareTo(o2) > 0) {
+								return -1;
+							} else if (o1.compareTo(o2) < 0) {
+								return 1;
+							}
+							return 0;
+						}
+
+					});
+			sencondsAccessMetric.forEach((k, v) -> {// key为IP
+				v.forEach((k1, v1) -> {// key为统计的秒
 					HashMap<String, AccessVO> map = Optional.ofNullable(sMap.get(k1)).orElseGet(() -> {
 						HashMap<String, AccessVO> m = new HashMap<String, AccessVO>();
 						sMap.put(k1, m);
@@ -172,7 +223,7 @@ public class IpAccessController {
 		model.addAttribute("displayType", displayType);
 		if ("s".equals(displayType)) {
 			return "localSecondsDataS";
-		}else {
+		} else {
 			return "localSecondsData";
 		}
 	}
