@@ -43,8 +43,9 @@ public class LimitTypeUpgradeHandler extends OverLimitAccessHandler {
 		}
 		Set<String> blockAccessIpList = new HashSet<String>();
 		topAccessMetricList.forEach(v -> {
-			if ((v.getNormal().intValue() > 0) && (v.getBlock().intValue() > 0) && (v.getBlock().intValue()
-					/ v.getNormal().intValue() > ipLimiterDashboardConfigurationProperties.getOverAccessLimitRate())) {// 判断ＩＰ是否有超限访问
+			if (v.getBlock().intValue() > 0 && (v.getNormal().intValue() == 0 || (v.getNormal().intValue() > 0
+					&& v.getBlock().intValue() / v.getNormal().intValue() > ipLimiterDashboardConfigurationProperties
+							.getOverAccessLimitRate()))) {// 判断ＩＰ是否有超限访问
 				log.warn("IP：" + v.getIp() + "超限访问超过正常流量的:"
 						+ (100 * ipLimiterDashboardConfigurationProperties.getOverAccessLimitRate())
 						+ "%，现将其加入到限制访问策略中.");
