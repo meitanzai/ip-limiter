@@ -82,7 +82,7 @@ public class GlobalMinutesAccessMetricHandler extends AbstraceMinutesAccessMetri
 					.hGet(RedisKey.MINUTE_ACCESS_KEY, currentMinute);
 			if (!CollectionUtils.isEmpty(redisMinuteAccessList)) {
 				Map<String, AccessVO> redisVoMap = redisMinuteAccessList.stream()
-						.collect(Collectors.toMap(AccessVO::getIp, accessVO -> accessVO));
+						.collect(Collectors.toMap(AccessVO::getIp, accessVO -> accessVO, (v1,v2)->v1));
 				minuteAccessList.forEach(o -> {
 					AccessVO vo = redisVoMap.get(o.getIp());
 					if (vo != null) {
