@@ -63,7 +63,7 @@
 
  **1. black-ips** 
 
-用于存储全局黑名单IP的Key，存储结构为Hash，HashKey为IP，HashValue为对象com.eeefff.limiter.common.vo.BlackIpVO，其定义的字段如下：
+用于存储全局黑名单IP的Key，存储结构为Hash，HashKey为IP，HashValue为对象com.eeeffff.limiter.common.vo.BlackIpVO，其定义的字段如下：
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/181916_7ec06ae2_306225.png "c7f707069f4ee8cba555071afc437162.png")
 
@@ -73,7 +73,7 @@
 
  **2. white-ips** 
 
-用于存储全局白名单IP的Key，存储结构为Hash，HashKey为IP，HashValue为对象com.eeefff.limiter.common.vo.WhiteIpVO，其定义的字段如下：
+用于存储全局白名单IP的Key，存储结构为Hash，HashKey为IP，HashValue为对象com.eeeffff.limiter.common.vo.WhiteIpVO，其定义的字段如下：
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/181935_423ed591_306225.png "8e94d98285f75dbcee6b5dbfd1daa1a9.png")
 
@@ -83,7 +83,7 @@
 
  **3. minute-access** 
 
-用于存储所有接入了IP限流平台的应用客户端的每分钟的访问统计汇总的Key，存储结构为Hash，HashKey为代表访问的分钟，HashValue为对象List，com.eeefff.limiter.common.vo.AccessVO定义的字段如下：
+用于存储所有接入了IP限流平台的应用客户端的每分钟的访问统计汇总的Key，存储结构为Hash，HashKey为代表访问的分钟，HashValue为对象List，com.eeeffff.limiter.common.vo.AccessVO定义的字段如下：
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/181952_2768bfae_306225.png "f9629ac5adb233a90a82686825374848.png")
 
@@ -95,7 +95,7 @@
 
  **4. ip-limit** 
 
-用于存储全局IP QPS设置的Key，存储结构为Hash，HashKey为IP，HashValue为对象com.eeefff.limiter.common.vo.IpLimitVO，其定义的字段如下：
+用于存储全局IP QPS设置的Key，存储结构为Hash，HashKey为IP，HashValue为对象com.eeeffff.limiter.common.vo.IpLimitVO，其定义的字段如下：
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/182017_514cc4cc_306225.png "bb44e9662ec695a2632ea2d538a17240.png")
 
@@ -105,7 +105,7 @@
 
  **5. registered-clients** 
 
-用于存储注册到IP限流平台管理控制台的Key，存储结构为Hash，HashKey为应用名称，HashValue为对象Map，用于存储该应用所有注册的客户端，Map的Key为应用客户端的IP+端口，com.eeefff.limiter.common.vo.Client对定义的字段如下：
+用于存储注册到IP限流平台管理控制台的Key，存储结构为Hash，HashKey为应用名称，HashValue为对象Map，用于存储该应用所有注册的客户端，Map的Key为应用客户端的IP+端口，com.eeeffff.limiter.common.vo.Client对定义的字段如下：
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/1231/182034_dc06f189_306225.png "46b585047d9f13b93bdbb3a044fc789c.png")
 
@@ -141,7 +141,7 @@
 - 令牌桶算法
 - 各种算法的优缺点，可以[查看这里](https://blog.csdn.net/weixin_41846320/article/details/95941361)。
 
-选择的算法为计数器（固定窗口）算法，因为我们的应用场景为单个ＩＰ的限流，而不是针对所有请求限流，且该算法实现简单，能够满足一定的突发情况的处理，该算法的实现类为com.eeefff.limiter.core.interceptor.IpQpsRateLimiter。
+选择的算法为计数器（固定窗口）算法，因为我们的应用场景为单个ＩＰ的限流，而不是针对所有请求限流，且该算法实现简单，能够满足一定的突发情况的处理，该算法的实现类为com.eeeffff.limiter.core.interceptor.IpQpsRateLimiter。
 
  **３）核心功能** 
 IP流控请求合法性检查：确保IP的访问不会超过QPS的限制，如果是黑名单的IP直接拒绝访问，确保系统的安全性
@@ -449,7 +449,7 @@ cd ip-limiter-dashboard
 
 ```
 		<dependency>
-		    <groupId>com.eeefff.limiter</groupId>
+		    <groupId>com.eeeffff.limiter</groupId>
 		    <artifactId>ip-limiter-core-web</artifactId>
 		    <version>${ip-limiter-core.version}</version>
 		</dependency>
@@ -463,7 +463,7 @@ Spring MVC应用的接入就会多一些步骤，不过也不麻烦。
 
 ```
 		<dependency>
-		    <groupId>com.eeefff.limiter</groupId>
+		    <groupId>com.eeeffff.limiter</groupId>
 		    <artifactId>ip-limiter-core-web</artifactId>
 		    <version>${ip-limiter-core.version}</version>
 		</dependency>
@@ -473,7 +473,7 @@ Spring MVC应用的接入就会多一些步骤，不过也不麻烦。
 
 因为IP限流平台是基于Inteceptor的，在Spring的配置文件中增加如下配置：
 ```
-<context:component-scan base-package="com.eeefff.limiter"></context:component-scan>
+<context:component-scan base-package="com.eeeffff.limiter"></context:component-scan>
 <mvc:interceptors>
     <ref bean="ipLimiterInterceptor" />
 </mvc:interceptors>
@@ -485,7 +485,7 @@ Spring MVC应用的接入就会多一些步骤，不过也不麻烦。
 Spring Gateway使用的是Netty做为通信模块，不能够像其它应用一样使用Inteceptor来实现，需要使用其本身的GlobalFilter结合ＷebFilter来实现，因而需要集成不同的包：
 ```
 		<dependency>
-		    <groupId>com.eeefff.limiter</groupId>
+		    <groupId>com.eeeffff.limiter</groupId>
 		    <artifactId>ip-limiter-core-spring-gateway</artifactId>
 		    <version>${ip-limiter-core.version}</version>
 		</dependency>
